@@ -39,8 +39,7 @@ class _ToDoMainPageState extends State<ToDoMainPage> {
         centerTitle: true,
       ),
 
-      body: _pages[_selectedIndex],
-
+      body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.check_box), label: 'ToDo'),
