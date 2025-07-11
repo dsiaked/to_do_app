@@ -38,7 +38,6 @@ class _ToDoMainPageState extends State<ToDoMainPage> {
         ),
         centerTitle: true,
       ),
-
       body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -53,10 +52,8 @@ class _ToDoMainPageState extends State<ToDoMainPage> {
         selectedItemColor: Colors.amber[800],
         unselectedItemColor: Colors.grey,
         backgroundColor: Colors.black,
-        type: BottomNavigationBarType
-            .fixed, // 항목 수가 3개 이하일 때 기본 값 + ~~ .shifting <- 이거는 항목이 3개를 초과할 때 기본값이다! 주의해주기!!
-        onTap:
-            _onItemTapped, // "나중에 호출해줘", 똑똑하게도 스스로 판단하여 함수에게 자동으로 넘겨주면서 호출해 줌!
+        type: BottomNavigationBarType.fixed,
+        onTap: _onItemTapped,
       ),
     );
   }

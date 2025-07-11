@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'to_do_provider.dart';
 
-class MyInfoPage extends StatefulWidget {
+class MyInfoPage extends StatelessWidget {
   const MyInfoPage({super.key});
 
   @override
-  State<MyInfoPage> createState() => _MyInfoPageState();
-}
-
-class _MyInfoPageState extends State<MyInfoPage> {
-  @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ToDoProvider>(context);
     return Scaffold(
       body: Padding(
-        padding: EdgeInsetsGeometry.all(60.0),
+        padding: const EdgeInsets.all(60.0),
         child: Column(
           children: [
             Row(
@@ -33,7 +31,6 @@ class _MyInfoPageState extends State<MyInfoPage> {
               ],
             ),
             SizedBox(height: 30.0),
-
             Row(
               children: [
                 Expanded(
@@ -47,7 +44,10 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('0', style: GoogleFonts.jua(fontSize: 30.0)),
+                        Text(
+                          '${provider.complededTasks}',
+                          style: GoogleFonts.jua(fontSize: 30.0),
+                        ),
                         SizedBox(height: 20.0),
                         Text('완료된 작업'),
                       ],
@@ -66,7 +66,10 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('0', style: GoogleFonts.jua(fontSize: 30.0)),
+                        Text(
+                          '${provider.pendingTasks}',
+                          style: GoogleFonts.jua(fontSize: 30.0),
+                        ),
                         SizedBox(height: 20.0),
                         Text('대기중인 작업'),
                       ],

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:to_do_list/after_login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'provi';
+import 'package:provider/provider.dart';
+import 'provider/provider_wrapper.dart';
+import 'to_do_provider.dart';
 
-void main() => runApp(ToDo());
+void main() => runApp(const ProviderWrapper(child: ToDo()));
 
 class ToDo extends StatelessWidget {
   const ToDo({super.key});

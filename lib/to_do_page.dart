@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-int count1 = 0;
-int count2 = 0;
+import 'package:provider/provider.dart';
+import 'to_do_provider.dart';
 
 // 1. 할 일 데이터의 구조를 정의하는 모델 클래스
 class TodoItem {
@@ -12,61 +11,25 @@ class TodoItem {
   TodoItem({required this.task, this.isDone = false});
 }
 
-class ToDoPage extends StatefulWidget {
+class ToDoPage extends StatelessWidget {
   const ToDoPage({super.key});
 
   @override
-  State<ToDoPage> createState() => _ToDoPageState();
-}
-
-class _ToDoPageState extends State<ToDoPage> {
-  // List<String> -> List<TodoItem> 으로 데이터 구조 변경
-  final List<TodoItem> _todoList = [];
-  final TextEditingController _controller = TextEditingController();
-
-  // 할 일을 리스트에 추가하는 함수
-  void _addTodoItem(String task) {
-    if (task.isNotEmpty) {
-      setState(() {
-        // 문자열이 아닌 TodoItem 객체를 리스트에 추가
-        _todoList.add(TodoItem(task: task));
-        count2++;
-      });
-      _controller.clear();
-      Navigator.of(context).pop();
-    }
-  }
-
-  // 2. 체크박스를 눌렀을 때 isDone 상태를 변경하는 함수
-  void _toggleDone(int index) {
-    setState(() {
-      _todoList[index].isDone = !_todoList[index].isDone;
-    });
-  }
-
-  // 3. 삭제 버튼을 눌렀을 때 해당 아이템을 리스트에서 제거하는 함수
-  void _deleteTodoItem(int index) {
-    setState(() {
-      _todoList.removeAt(index);
-      count1++;
-      count2--;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ToDoProvider>(context);
+    final TextEditingController controller = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         // 4. AppBar의 뒤로가기 화살표 자동 생성 방지
         automaticallyImplyLeading: false,
         title: Row(
           children: [
-            SizedBox(width: 10.0),
+            const SizedBox(width: 10.0),
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.check_circle_rounded),
             ),
-            SizedBox(width: 10.0),
+            const SizedBox(width: 10.0),
             Text(
               'To do List',
               style: GoogleFonts.gothicA1(fontSize: 20.0, color: Colors.black),
@@ -77,10 +40,10 @@ class _ToDoPageState extends State<ToDoPage> {
       body: Stack(
         children: [
           ListView.builder(
-            itemCount: _todoList.length,
+            itemCount: provider.todoList.length,
             itemBuilder: (context, index) {
               // 현재 아이템 가져오기
-              final todoItem = _todoList[index];
+              final todoItem = provider.todoList[index];
 
               // 5. ListTile을 사용해 UI 구성
               return Card(
@@ -93,7 +56,7 @@ class _ToDoPageState extends State<ToDoPage> {
                   leading: Checkbox(
                     value: todoItem.isDone,
                     onChanged: (bool? value) {
-                      _toggleDone(index);
+                      provider.toggleDone(index);
                     },
                   ),
                   // 5-2. 가운데: 할 일 텍스트 (완료 시 취소선)
@@ -106,13 +69,13 @@ class _ToDoPageState extends State<ToDoPage> {
                           ? TextDecoration.lineThrough
                           : TextDecoration.none,
                       color: todoItem.isDone ? Colors.grey : Colors.black,
-                    ),
+                    ), // 조건 ? 값1 : 값2 <- 조건이 true 일 경우 값1이 , false 일 경우 값2가 된다. 즉 만약 true 이면 ? 뒤에 값이 decoration 으로 반환이 된다!
                   ),
                   // 5-3. 오른쪽: 삭제 버튼
                   trailing: IconButton(
                     icon: const Icon(Icons.delete_outline, color: Colors.red),
                     onPressed: () {
-                      _deleteTodoItem(index);
+                      provider.deleteTodoItem(index);
                     },
                   ),
                 ),
@@ -139,7 +102,9 @@ class _ToDoPageState extends State<ToDoPage> {
                 child: FloatingActionButton(
                   onPressed: () {
                     // 팝업을 띄울 때 컨트롤러와 추가 함수를 전달합니다.
-                    showPopup(context, _controller, _addTodoItem);
+                    showPopup(context, controller, (task) {
+                      provider.addTodoItem(task);
+                    });
                   },
                   shape: const CircleBorder(),
                   elevation: 12.0,
